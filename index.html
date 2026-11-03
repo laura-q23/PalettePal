@@ -1733,11 +1733,11 @@ function render() {
       : `<p class="muted">The list has no different colour that fully fits ${s.name} in this direction yet.</p>`;
   }
 
-  out.innerHTML = `
+    out.innerHTML = `
     <div class="headline"><span style="color:${colour};font-size:24px;margin-right:6px">${icon}</span>${text}</div>
     <div style="margin-top:6px"><b>Your colour:</b> ${describeColour(sample.lch)}</div>
+    <div class="muted" style="margin-top:4px">Closest season for this colour: ${closestSeasonFor(sample.lch, sample.share)}</div>
     ${sugHtml}
-        <div class="muted" style="margin-top:8px">Closest season for this colour: ${closestSeasonFor(sample.lch, sample.share)}</div>
     <details>
       <summary class="btn ghost small details-btn">Show trait details</summary>
       ${T.map(traitHTML).join('')}
