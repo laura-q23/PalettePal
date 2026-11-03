@@ -1737,7 +1737,7 @@ function render() {
     <div class="headline"><span style="color:${colour};font-size:24px;margin-right:6px">${icon}</span>${text}</div>
     <div style="margin-top:6px"><b>Your colour:</b> ${describeColour(sample.lch)}</div>
     ${sugHtml}
-    <div class="muted" style="margin-top:8px">Season: ${s.name}. ${s.description}. Closest season for this colour: ${closestSeasonFor(sample.lch, sample.share)}</div>
+        <div class="muted" style="margin-top:8px">Closest season for this colour: ${closestSeasonFor(sample.lch, sample.share)}</div>
     <details>
       <summary class="btn ghost small details-btn">Show trait details</summary>
       ${T.map(traitHTML).join('')}
