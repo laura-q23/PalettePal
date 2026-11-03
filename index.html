@@ -1662,6 +1662,23 @@ function suggestHTML(sug, seasonName) {
   </div>`;
 }
 
+// Describes the picked colour in plain words, using its actual values
+function describeColour(c) {
+  const ext = neutralExtreme(c);
+  if (ext === 'black') return 'Black';
+  if (ext === 'white') return 'White';
+  const kind = neutralKind(c);
+  const v = clamp01(c.L / 100), ch = clamp01(c.C / 120);
+  const level = x => x > 0.66 ? 'light' : x < 0.34 ? 'dark' : 'medium';
+  const brightness = x => x > 0.66 ? 'bright' : x < 0.34 ? 'muted' : 'medium';
+  if (c.C < NEUTRAL_CHROMA) {
+    return `${cap(level(v))} ${neutralIsWarm(c) ? 'warm' : 'cool'} grey`;
+  }
+  const tone = warmthPos(c.H) >= 0.5 ? 'warm' : 'cool';
+  if (kind) return `${cap(level(v))} ${kind.toLowerCase()}, ${tone}`;
+  return `${cap(tone)}, ${level(v)} and ${brightness(ch)}`;
+}
+  
 function render() {
   const out = $('results');
   if (!sample) {
@@ -1694,11 +1711,16 @@ function render() {
       : `<p class="muted">The list has no different colour that fully fits ${s.name} in this direction yet.</p>`;
   }
 
-  out.innerHTML = `
+      out.innerHTML = `
     <div class="headline"><span style="color:${colour};font-size:24px;margin-right:6px">${icon}</span>${text}</div>
+    <div style="margin-top:6px"><b>Your colour:</b> ${describeColour(sample.lch)}</div>
     ${sugHtml}
-    <div class="muted" style="margin-top:8px">${s.description} · Closest season: ${closestSeasonFor(sample.lch, sample.share)}</div>
+    <div class="muted" style="margin-top:8px">Season: ${s.name}. ${s.description}. Closest season for this colour: ${closestSeasonFor(sample.lch, sample.share)}</div>
     <details>
+      <summary class="btn ghost small details-btn">Show trait details</summary>
+      ${T.map(traitHTML).join('')}
+    </details>`;
+  
       <summary class="btn ghost small details-btn">Show trait details</summary>
       ${T.map(traitHTML).join('')}
     </details>`;
