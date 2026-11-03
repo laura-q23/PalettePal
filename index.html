@@ -50,6 +50,8 @@ select.season { font-size:16px; font-weight:700; padding:6px 10px; border:1px so
 .suggest { display:flex; gap:12px; margin-top:14px; padding:12px; border-radius:12px; background:var(--card); }
 .sugsw { width:48px; height:48px; border-radius:8px; border:1px solid var(--line); flex:0 0 48px; }
 details summary { list-style:none; }
+  details summary::-webkit-details-marker { display:none; }
+.details-btn { display:inline-block; margin:12px 0 4px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -1673,9 +1675,15 @@ function render() {
   const total = T.reduce((a, t) => a + t.miss, 0);
   const nearly = fails > 0 && worst <= NEARLY_WORST && total <= NEARLY_TOTAL;
   const off = joinWords(T.filter(t => !t.pass && t.direction).map(t => t.direction)) || 'off';
-  const head = fails === 0 ? `Works for ${s.name}`
-             : nearly ? `Nearly works: a bit too ${off}`
-             : `Doesn't work: too ${off}`;
+
+  let icon, colour, text;
+  if (fails === 0) {
+    icon = '✓'; colour = '#34c759'; text = `Works for ${s.name}`;
+  } else if (nearly) {
+    icon = '≈'; colour = '#ff9500'; text = `Nearly works: a bit too ${off}`;
+  } else {
+    icon = '✗'; colour = '#ff3b30'; text = `Doesn't work: too ${off}`;
+  }
 
   // The suggestion sits straight under the headline, so it's visible without scrolling
   let sugHtml = '';
@@ -1687,15 +1695,15 @@ function render() {
   }
 
   out.innerHTML = `
-    <div class="headline">${head}</div>
+    <div class="headline"><span style="color:${colour};font-size:24px;margin-right:6px">${icon}</span>${text}</div>
+    <div class="muted" style="font-size:12px">✓ works &nbsp;·&nbsp; ≈ nearly (only small differences) &nbsp;·&nbsp; ✗ doesn't work</div>
     ${sugHtml}
-    <div class="muted">${s.description} · Closest season: ${closestSeasonFor(sample.lch, sample.share)}</div>
+    <div class="muted" style="margin-top:8px">${s.description} · Closest season: ${closestSeasonFor(sample.lch, sample.share)}</div>
     <details>
-      <summary class="muted" style="padding:10px 0;cursor:pointer">Show trait details</summary>
+      <summary class="btn ghost small details-btn">Show trait details</summary>
       ${T.map(traitHTML).join('')}
     </details>`;
 }
-
 // ===== START =====
 const seasonSelect = $('season');
 SEASONS.forEach(s => {
