@@ -1,6 +1,13 @@
-  <h1 style="margin:0">Palette Pal</h1>
-  <img src="logo.svg" alt="Palette Pal logo" width="48" height="48">
-</div>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Palette Pal">
+<link rel="icon" href="logo.svg">
+<link rel="apple-touch-icon" href="logo.svg">
+<title>Palette Pal</title>
 <style>
 :root { --ink:#111; --muted:#777; --line:rgba(128,128,128,.35); --bg:#fff; --card:#f2f2f5; }
 @media (prefers-color-scheme: dark) {
@@ -9,11 +16,15 @@
 * { box-sizing: border-box; }
 body { margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system, system-ui, sans-serif; }
 main { max-width:640px; margin:0 auto; padding:12px 14px 40px; }
-h1 { font-size:20px; margin:4px 0 10px; }
-.row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+h1 { font-size:20px; margin:0; }
+.header { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin:4px 0 10px; }
+.brand { display:flex; align-items:center; gap:8px; }
+.brand img { width:40px; height:40px; }
+.btns { display:flex; gap:8px; flex-wrap:wrap; }
 .btn { background:#3a3a3e; color:#fff; border:0; border-radius:10px; padding:10px 14px; font-size:16px; font-weight:600; }
 .btn.small { padding:6px 12px; font-size:14px; }
 .btn.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); }
+.row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 .stage { position:relative; margin-top:10px; }
 #photo { width:100%; height:220px; display:block; border-radius:12px; background:#111; touch-action:none; }
 .placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#aaa; text-align:center; padding:20px; pointer-events:none; }
@@ -38,17 +49,23 @@ select.season { font-size:16px; font-weight:700; padding:6px 10px; border:1px so
 .reason { font-size:13px; margin-top:4px; }
 .suggest { display:flex; gap:12px; margin-top:14px; padding:12px; border-radius:12px; background:var(--card); }
 .sugsw { width:48px; height:48px; border-radius:8px; border:1px solid var(--line); flex:0 0 48px; }
+details summary { list-style:none; }
 </style>
 </head>
 <body>
 <main>
-  <img src="logo.svg" alt="Palette Pal logo" width="48" height="48" style="vertical-align:middle;margin-right:8px">
-<h1>Palette Pal</h1>
 
-<div class="row">
-  <button class="btn" id="takeBtn">Take a photo</button>
-  <button class="btn" id="chooseBtn">Choose a picture</button>
+<div class="header">
+  <div class="brand">
+    <img src="logo.svg" alt="Palette Pal logo">
+    <h1>Palette Pal</h1>
+  </div>
+  <div class="btns">
+    <button class="btn small" id="takeBtn">Take a photo</button>
+    <button class="btn small" id="chooseBtn">Choose a picture</button>
+  </div>
 </div>
+
 <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
 <input type="file" id="fileInput" accept="image/*" hidden>
 
@@ -85,8 +102,7 @@ select.season { font-size:16px; font-weight:700; padding:6px 10px; border:1px so
 
 <script>
 // ===== PASTE COLOURS BETWEEN THESE LINES =====
-// Copy the NamedColour(...) lines from ColourNames.swift and paste them here,
-// replacing the examples. Lines with a Name,hex format also work.
+// Paste your NamedColour(...) lines here, replacing the examples.
 const COLOUR_TEXT = `
     NamedColour(name: "Black", hex: 0x000000),
     NamedColour(name: "Jet Black", hex: 0x0A0A0A),
@@ -1068,18 +1084,18 @@ const COLOUR_TEXT = `
 // ===== PASTE COLOURS ABOVE THIS LINE =====
 
 // ===== SETTINGS (same as the app) =====
-const NEUTRAL_CHROMA = 12;          // below this a colour is a neutral
-const WARM_FAMILY_HUE = 60;         // colours within this hue count as one family
-const HOME_SHARE = 0.90;            // a season on the colour's own side accepts this share of its family
-const AWAY_SHARE = 0.50;            // a season on the opposite side accepts this share
-const HUE_LIMITS = [25, 35];        // coloured suggestions stay within these hue distances
-const WARM_NAVY_MIN = 0.08;         // warm seasons need navy at least this warm
-const MIN_VISIBLE = 8;              // suggestions must differ this much (Lab)
+const NEUTRAL_CHROMA = 12;
+const WARM_FAMILY_HUE = 60;
+const HOME_SHARE = 0.90;
+const AWAY_SHARE = 0.50;
+const HUE_LIMITS = [25, 35];
+const WARM_NAVY_MIN = 0.08;
+const MIN_VISIBLE = 8;
 const FALLBACK_VISIBLE = 4;
-const CLOSE_NAME = 14;              // a list name is shown as the name only within this distance
-const NEARLY_WORST = 0.10;          // "Nearly works" limits
+const CLOSE_NAME = 14;
+const NEARLY_WORST = 0.10;
 const NEARLY_TOTAL = 0.20;
-const SUGGEST_TOL = 0.02;           // suggestions may be this far off on a trait
+const SUGGEST_TOL = 0.02;
 
 const GRAD = {
   warm:   'linear-gradient(to right,#1e6fff,#22c7e8,#ffd60a,#ff9500)',
@@ -1103,7 +1119,7 @@ const SEASONS = [
   { name:'Bright Winter', side:'cool', value:[0.20,0.95], chroma:[0.50,1.00], description:'Cool, vivid and striking' }
 ];
 
-// ===== MAIN HELPERS =====
+// ===== HELPERS =====
 const $ = id => document.getElementById(id);
 const clamp01 = x => Math.min(Math.max(x, 0), 1);
 const warmthPos = h => (1 + Math.cos((h - 70) * Math.PI / 180)) / 2;
@@ -1293,410 +1309,4 @@ function checks(c, s, share) {
   } else if (v >= s.value[0] && v <= s.value[1]) {
     val = { pass:true, reason:'Lightness fits this season', miss:0, direction:null };
   } else if (v > s.value[1]) {
-    val = { pass:false, reason:'Too light for this season', miss: v - s.value[1], direction:'light' };
-  } else {
-    val = { pass:false, reason:'Too dark for this season', miss: s.value[0] - v, direction:'dark' };
-  }
-  T.push({ title:'Value', ...val, yourText: String(Math.round(c.L)),
-           targetText: levelWord(s.value, 'light', 'medium', 'dark'),
-           leftLabel:'Light', rightLabel:'Dark', grad:GRAD.value,
-           low: 1 - s.value[1], high: 1 - s.value[0], target: 1 - mid(s.value), yours: 1 - v });
-
-  // Chroma
-  let chr, cLow, cHigh, cTarget, cText;
-  if (ext) {
-    chr = { pass:true, reason:"Frozen at this extreme, so brightness isn't judged", miss:0, direction:null };
-    cLow = s.chroma[0]; cHigh = s.chroma[1]; cTarget = mid(s.chroma);
-    cText = levelWord(s.chroma, 'bright', 'medium', 'muted');
-  } else if (neutral) {
-    const r = neutralRange(c, s), ok = c.C >= r.low && c.C <= r.high;
-    chr = { pass:ok,
-            reason: ok ? (pure ? 'Greyness fits this season' : 'Clearness fits this season')
-                       : (c.C < r.low ? (pure ? 'Too pure a grey for this season' : 'Too muted for this season')
-                                      : (pure ? 'Too tinted for this season' : 'Too bright for this season')),
-            miss: ok ? 0 : outside(c.C, [r.low, r.high]) / 120,
-            direction: ok ? null : (c.C < r.low ? (pure ? 'pure' : 'muted') : (pure ? 'tinted' : 'bright')) };
-    cLow = r.low / 120; cHigh = r.high / 120; cTarget = (r.low + r.high) / 240;
-    cText = `${pure ? 'grey ' : ''}${Math.round(r.low)}–${Math.round(r.high)}`;
-  } else {
-    const ok = ch >= s.chroma[0] && ch <= s.chroma[1];
-    chr = { pass:ok,
-            reason: ok ? 'Brightness fits this season' : (ch > s.chroma[1] ? 'Too bright for this season' : 'Too muted for this season'),
-            miss: outside(ch, s.chroma),
-            direction: ok ? null : (ch > s.chroma[1] ? 'bright' : 'muted') };
-    cLow = s.chroma[0]; cHigh = s.chroma[1]; cTarget = mid(s.chroma);
-    cText = levelWord(s.chroma, 'bright', 'medium', 'muted');
-  }
-  T.push({ title:'Chroma', ...chr, yourText: String(Math.round(c.C)), targetText: cText,
-           leftLabel:'Muted', rightLabel:'Bright', grad:GRAD.chroma,
-           low: cLow, high: cHigh, target: cTarget, yours: ch });
-
-  return T;
-}
-
-// ===== CLOSEST SEASON =====
-function closestSeasonFor(c, share) {
-  const ext = neutralExtreme(c);
-  if (ext) return ext === 'black' ? 'Dark Winter' : 'True Winter';
-  const neutral = isNeutralColour(c);
-  const v = clamp01(c.L / 100), ch = clamp01(c.C / 120);
-  let best = '', bestScore = Infinity;
-  for (const s of SEASONS) {
-    let score;
-    if (neutral) {
-      const r = neutralRange(c, s);
-      const mismatch = neutralUndertoneFits(c, s) ? 0 : 1;
-      score = mismatch + outside(c.C, [r.low, r.high]) / 10;
-    } else {
-      const accept = undertoneAccept(c, s);
-      let hueOut;
-      if (s.side === 'warm' && isNavyType(c)) hueOut = Math.max(0, WARM_NAVY_MIN - warmthPos(c.H));
-      else if (s.side === 'warm') hueOut = Math.max(0, (1 - accept) - share);
-      else hueOut = Math.max(0, share - accept);
-      const valueOut = outside(v, s.value), chromaOut = outside(ch, s.chroma);
-      const centre = Math.abs(v - mid(s.value)) + Math.abs(ch - mid(s.chroma));
-      score = hueOut + valueOut + chromaOut + 0.1 * centre;
-    }
-    if (score < bestScore) { bestScore = score; best = s.name; }
-  }
-  return best;
-}
-
-// ===== SUGGESTIONS =====
-function nearestListName(lab) {
-  let best = null, bd = Infinity;
-  for (const e of LIST) {
-    const d = labDist(lab, e.lab);
-    if (d < bd) { bd = d; best = e; }
-  }
-  return best ? { name: best.name, distance: bd } : null;
-}
-function movesOffTraitsRight(e, s, season, off) {
-  const w0 = warmthPos(s.H), w1 = warmthPos(e.lch.H);
-  const v0 = clamp01(s.L / 100), v1 = clamp01(e.lch.L / 100);
-  const c0 = clamp01(s.C / 120), c1 = clamp01(e.lch.C / 120);
-  if (off.has('Undertone')) {
-    if (season.side === 'warm') { if (!(w1 > w0)) return false; }
-    else if (!(w1 < w0)) return false;
-  }
-  if (off.has('Value')) {
-    if (v0 < season.value[0] && !(v1 > v0)) return false;
-    if (v0 > season.value[1] && !(v1 < v0)) return false;
-  }
-  if (off.has('Chroma')) {
-    if (c0 < season.chroma[0] && !(c1 > c0)) return false;
-    if (c0 > season.chroma[1] && !(c1 < c0)) return false;
-  }
-  return true;
-}
-function betterReason(old, nw, season, off) {
-  const parts = [], neutral = isNeutralColour(old);
-  if (off.has('Undertone')) {
-    if (neutral) parts.push(season.side === 'warm' ? 'warmer' : 'cooler');
-    else {
-      const gap = warmthPos(nw.H) - warmthPos(old.H);
-      if (gap > 0.01) parts.push('warmer');
-      if (gap < -0.01) parts.push('cooler');
-    }
-  }
-  if (off.has('Value') && !neutral) {
-    const d = nw.L - old.L;
-    if (d > 2) parts.push('lighter');
-    if (d < -2) parts.push('deeper');
-  }
-  if (off.has('Chroma')) {
-    const d = nw.C - old.C;
-    if (d > 2) parts.push(neutral ? 'more tinted' : 'brighter');
-    if (d < -2) parts.push(neutral ? 'greyer' : 'more muted');
-  }
-  if (!parts.length) return 'Very close to your colour';
-  return cap(joinWords(parts)) + ' than your colour';
-}
-function tryColour(season, sLab, sLch, off, avoid) {
-  const sNeutral = isNeutralColour(sLch), sKind = neutralKind(sLch);
-  const av = (avoid || '').toLowerCase();
-  const bands = sNeutral ? [180] : HUE_LIMITS;
-  for (const minChange of [MIN_VISIBLE, FALLBACK_VISIBLE]) {
-    for (const band of bands) {
-      let best = null, bestD = Infinity;
-      for (const e of LIST) {
-        if (e.name.toLowerCase() === av) continue;
-        const d = labDist(sLab, e.lab);
-        if (!(d >= minChange && d < bestD)) continue;
-        if (sNeutral) {
-          if (e.kind !== sKind) continue;
-        } else {
-          if (e.kind !== null) continue;
-          if (hueGap(e.lch.H, sLch.H) > band) continue;
-          if (!movesOffTraitsRight(e, sLch, season, off)) continue;
-        }
-        if (!checks(e.lch, season, e.share).every(t => t.pass || t.miss <= SUGGEST_TOL)) continue;
-        best = e; bestD = d;
-      }
-      if (best) return { colour: best, reason: betterReason(sLch, best.lch, season, off) };
-    }
-  }
-  return null;
-}
-
-// ===== PICTURE =====
-const canvas = $('photo'), ctx = canvas.getContext('2d');
-let src = null, srcCtx = null;
-let view = { zoom: 1, ox: 0, oy: 0 };
-let marker = null;
-const pointers = new Map();
-let gesture = null, pinch = null, pinched = false;
-
-function scale() {
-  return Math.min(canvas.clientWidth / src.width, canvas.clientHeight / src.height) * view.zoom;
-}
-function clampView() {
-  if (!src) return;
-  const s = scale(), W = canvas.clientWidth, H = canvas.clientHeight;
-  const mx = Math.max(0, (src.width * s - W) / 2), my = Math.max(0, (src.height * s - H) / 2);
-  view.ox = Math.min(mx, Math.max(-mx, view.ox));
-  view.oy = Math.min(my, Math.max(-my, view.oy));
-}
-function draw() {
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.clientWidth, H = canvas.clientHeight;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0, 0, W, H);
-  if (!src) return;
-  const s = scale();
-  const x0 = W / 2 + view.ox - src.width * s / 2;
-  const y0 = H / 2 + view.oy - src.height * s / 2;
-  ctx.drawImage(src, x0, y0, src.width * s, src.height * s);
-  if (marker) {
-    ctx.strokeStyle = '#ff2d55';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(x0 + marker.x * s, y0 + marker.y * s, 14, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-}
-function fit() {
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = Math.round(canvas.clientWidth * dpr);
-  canvas.height = Math.round(canvas.clientHeight * dpr);
-  clampView();
-  draw();
-}
-function toImage(x, y) {
-  const s = scale(), W = canvas.clientWidth, H = canvas.clientHeight;
-  return { x: (x - (W / 2 + view.ox)) / s + src.width / 2, y: (y - (H / 2 + view.oy)) / s + src.height / 2 };
-}
-function tap(x, y) {
-  if (!src) return;
-  const p = toImage(x, y);
-  const ix = Math.floor(p.x), iy = Math.floor(p.y);
-  if (ix < 0 || iy < 0 || ix >= src.width || iy >= src.height) return;
-  marker = { x: p.x, y: p.y };
-  draw();
-  const d = srcCtx.getImageData(ix, iy, 1, 1).data;
-  analyse(d[0] / 255, d[1] / 255, d[2] / 255);
-}
-function local(e) {
-  const r = canvas.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
-}
-function pinchDist() {
-  const [a, b] = [...pointers.values()];
-  return Math.hypot(a.x - b.x, a.y - b.y) || 1;
-}
-canvas.addEventListener('pointerdown', e => {
-  if (!src) return;
-  canvas.setPointerCapture(e.pointerId);
-  const p = local(e);
-  pointers.set(e.pointerId, p);
-  if (pointers.size === 1) {
-    gesture = { x: p.x, y: p.y, t: Date.now(), moved: false };
-    pinched = false;
-  } else {
-    pinched = true;
-    pinch = { d: pinchDist(), z: view.zoom };
-  }
-});
-canvas.addEventListener('pointermove', e => {
-  if (!pointers.has(e.pointerId)) return;
-  const prev = pointers.get(e.pointerId);
-  const p = local(e);
-  pointers.set(e.pointerId, p);
-  if (pointers.size >= 2 && pinch) {
-    view.zoom = Math.min(8, Math.max(1, pinch.z * pinchDist() / pinch.d));
-    clampView(); draw();
-  } else if (pointers.size === 1 && gesture) {
-    if (Math.hypot(p.x - gesture.x, p.y - gesture.y) > 6) gesture.moved = true;
-    if (gesture.moved) {
-      view.ox += p.x - prev.x;
-      view.oy += p.y - prev.y;
-      clampView(); draw();
-    }
-  }
-});
-function endPointer(e) {
-  if (!pointers.has(e.pointerId)) return;
-  const p = pointers.get(e.pointerId);
-  if (pointers.size === 1 && gesture && !gesture.moved && !pinched && Date.now() - gesture.t < 600) {
-    tap(p.x, p.y);
-  }
-  pointers.delete(e.pointerId);
-  if (pointers.size === 0) {
-    gesture = null; pinch = null; pinched = false;
-  } else if (pointers.size === 1) {
-    const [r] = [...pointers.values()];
-    pinch = null;
-    gesture = { x: r.x, y: r.y, t: Date.now(), moved: true };
-  }
-}
-canvas.addEventListener('pointerup', endPointer);
-canvas.addEventListener('pointercancel', endPointer);
-
-function zoomBy(f) {
-  if (!src) return;
-  view.zoom = Math.min(8, Math.max(1, view.zoom * f));
-  clampView(); draw();
-}
-$('zoomIn').onclick = () => zoomBy(1.25);
-$('zoomOut').onclick = () => zoomBy(0.8);
-$('zoomReset').onclick = () => { view = { zoom: 1, ox: 0, oy: 0 }; clampView(); draw(); };
-
-function loadFile(file) {
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = () => {
-    const max = 1600, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
-    const c = document.createElement('canvas');
-    c.width = Math.round(img.naturalWidth * k);
-    c.height = Math.round(img.naturalHeight * k);
-    srcCtx = c.getContext('2d', { willReadFrequently: true });
-    srcCtx.drawImage(img, 0, 0, c.width, c.height);
-    src = c;
-    view = { zoom: 1, ox: 0, oy: 0 };
-    marker = null;
-    sample = null;
-    $('placeholder').style.display = 'none';
-    $('cname').textContent = '';
-    $('neutralLabel').textContent = '';
-    $('hex').textContent = '#808080';
-    $('swatch').style.background = '#808080';
-    fit();
-    render();
-    URL.revokeObjectURL(url);
-  };
-  img.src = url;
-}
-$('takeBtn').onclick = () => $('camInput').click();
-$('chooseBtn').onclick = () => $('fileInput').click();
-['camInput', 'fileInput'].forEach(id => {
-  $(id).addEventListener('change', e => {
-    loadFile(e.target.files[0]);
-    e.target.value = '';
-  });
-});
-window.addEventListener('resize', () => { if (src) fit(); });
-
-// ===== ANALYSIS AND RESULTS =====
-let sample = null, nearRaw = '';
-
-function analyse(r, g, b) {
-  const lab = rgbToLab(r, g, b), lch = lchFrom(lab);
-  sample = { hex: rgbToHex(r, g, b), lab, lch, share: percentile(LIST, lch.H, warmthPos(lch.H)) };
-  const near = nearestListName(lab);
-  nearRaw = near ? near.name : '';
-  $('hex').textContent = '#' + sample.hex;
-  $('swatch').style.background = '#' + sample.hex;
-  $('cname').textContent = near
-    ? (near.distance <= CLOSE_NAME ? near.name : `Closest: ${near.name} (rough match)`)
-    : '';
-  const nk = neutralKind(lch);
-  $('neutralLabel').textContent = nk ? `Neutral: ${nk}` : '';
-  render();
-}
-
-function traitHTML(t) {
-  const icon = t.pass ? '<span class="ok">✓</span>' : '<span class="bad">✗</span>';
-  return `<div class="trait">
-    <div class="trow">${icon}<b>${t.title}</b>
-      <span class="right">Colour ${t.yourText} · season ${t.targetText}</span></div>
-    <div class="bar" style="background:${t.grad}">
-      <div class="allowed" style="left:${t.low * 100}%;width:${Math.max(0, t.high - t.low) * 100}%"></div>
-      <div class="centre" style="left:${t.target * 100}%"></div>
-      <div class="dot" style="left:${t.yours * 100}%"></div>
-    </div>
-    <div class="labels"><span>${t.leftLabel}</span><span>${t.rightLabel}</span></div>
-    <div class="reason ${t.pass ? 'muted' : ''}">${t.reason}</div>
-  </div>`;
-}
-
-function suggestHTML(sug, seasonName) {
-  return `<div class="suggest">
-    <div class="sugsw" style="background:#${sug.colour.hex}"></div>
-    <div>
-      <div class="muted">Try for ${seasonName}</div>
-      <div style="font-weight:700">${sug.colour.name}</div>
-      <div class="hex" style="font-size:14px">#${sug.colour.hex}</div>
-      <div style="font-size:13px">${sug.reason}</div>
-    </div>
-  </div>`;
-}
-
-function render() {
-  const out = $('results');
-  if (!sample) {
-    out.innerHTML = '<p class="muted">Tap a spot on the picture to see how it fits each season.</p>';
-    return;
-  }
-  const s = SEASONS.find(x => x.name === $('season').value) || SEASONS[0];
-  const T = checks(sample.lch, s, sample.share);
-  const fails = T.filter(t => !t.pass).length;
-  const worst = Math.max(0, ...T.map(t => t.miss));
-  const total = T.reduce((a, t) => a + t.miss, 0);
-  const nearly = fails > 0 && worst <= NEARLY_WORST && total <= NEARLY_TOTAL;
-  const off = joinWords(T.filter(t => !t.pass && t.direction).map(t => t.direction)) || 'off';
-  const head = fails === 0 ? `Works for ${s.name}`
-             : nearly ? `Nearly works: a bit too ${off}`
-             : `Doesn't work: too ${off}`;
-
-  // The suggestion sits straight under the headline, so it's visible without scrolling
-  let sugHtml = '';
-  if (fails > 0) {
-    const offSet = new Set(T.filter(t => !t.pass).map(t => t.title));
-    const sug = tryColour(s, sample.lab, sample.lch, offSet, nearRaw);
-    sugHtml = sug ? suggestHTML(sug, s.name)
-      : `<p class="muted">The list has no different colour that fully fits ${s.name} in this direction yet.</p>`;
-  }
-
-  out.innerHTML = `
-    <div class="headline">${head}</div>
-    ${sugHtml}
-    <div class="muted">${s.description} · Closest season: ${closestSeasonFor(sample.lch, sample.share)}</div>
-    <details>
-      <summary class="muted" style="padding:10px 0;cursor:pointer">Show trait details</summary>
-      ${T.map(traitHTML).join('')}
-    </details>`;
-}
-// ===== START =====
-const seasonSelect = $('season');
-SEASONS.forEach(s => {
-  const o = document.createElement('option');
-  o.value = s.name;
-  o.textContent = s.name;
-  seasonSelect.appendChild(o);
-});
-try {
-  seasonSelect.value = localStorage.getItem('season') || SEASONS[0].name;
-} catch (e) {
-  seasonSelect.value = SEASONS[0].name;
-}
-seasonSelect.addEventListener('change', () => {
-  try { localStorage.setItem('season', seasonSelect.value); } catch (e) {}
-  render();
-});
-fit();
-render();
-</script>
-</body>
-</html>
+    val = { pass:false, reason:'Too light for this season', miss: v
