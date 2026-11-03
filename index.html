@@ -20,7 +20,7 @@ h1 { font-size:20px; margin:4px 0 10px; }
 .btn.small { padding:6px 12px; font-size:14px; }
 .btn.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); }
 .stage { position:relative; margin-top:10px; }
-#photo { width:100%; height:300px; display:block; border-radius:12px; background:#111; touch-action:none; }
+#photo { width:100%; height:220px; display:block; border-radius:12px; background:#111; touch-action:none; }
 .placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#aaa; text-align:center; padding:20px; pointer-events:none; }
 .hint, .muted { color:var(--muted); font-size:13px; }
 .swatchrow { display:flex; gap:12px; align-items:center; margin:14px 0; }
@@ -1664,20 +1664,24 @@ function render() {
              : nearly ? `Nearly works: a bit too ${off}`
              : `Doesn't work: too ${off}`;
 
-  let html = `<div class="headline">${head}</div>
-    <div class="muted">${s.description}</div>
-    <div class="muted">Closest season for this colour: ${closestSeasonFor(sample.lch, sample.share)}</div>
-    ${T.map(traitHTML).join('')}`;
-
+  // The suggestion sits straight under the headline, so it's visible without scrolling
+  let sugHtml = '';
   if (fails > 0) {
     const offSet = new Set(T.filter(t => !t.pass).map(t => t.title));
     const sug = tryColour(s, sample.lab, sample.lch, offSet, nearRaw);
-    html += sug ? suggestHTML(sug, s.name)
+    sugHtml = sug ? suggestHTML(sug, s.name)
       : `<p class="muted">The list has no different colour that fully fits ${s.name} in this direction yet.</p>`;
   }
-  out.innerHTML = html;
-}
 
+  out.innerHTML = `
+    <div class="headline">${head}</div>
+    ${sugHtml}
+    <div class="muted">${s.description} · Closest season: ${closestSeasonFor(sample.lch, sample.share)}</div>
+    <details>
+      <summary class="muted" style="padding:10px 0;cursor:pointer">Show trait details</summary>
+      ${T.map(traitHTML).join('')}
+    </details>`;
+}
 // ===== START =====
 const seasonSelect = $('season');
 SEASONS.forEach(s => {
